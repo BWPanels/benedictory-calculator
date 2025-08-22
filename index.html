@@ -1,196 +1,505 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Benedictory Wood Panels - Calculator</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0; padding: 0;
-      background: #fff7eb;
-      color: #333;
-    }
-    header {
-      text-align: center;
-      padding: 20px;
-      background: linear-gradient(to right, #fbc531, #f39c12);
-      color: white;
-    }
-    .container {
-      display: flex;
-      gap: 20px;
-      padding: 20px;
-    }
-    .card {
-      flex: 1;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    h2 { margin-top: 0; color: #8e4b10; }
-    input, button {
-      padding: 10px;
-      margin: 5px 0;
-      width: 100%;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    button {
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .btn-add { background: #6c5ce7; color: white; }
-    .btn-item { background: #0984e3; color: white; }
-    .btn-receipt { background: #00b894; color: white; }
-    .btn-share { background: #0984e3; color: white; }
-    .product-list, .item-list { border: 1px dashed #ccc; padding: 10px; margin-top: 10px; }
-    .product-entry, .item-entry { display: flex; justify-content: space-between; margin-bottom: 5px; }
-    .total { font-weight: bold; font-size: 18px; color: green; }
-    /* Modal */
-    .modal {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5); justify-content: center; align-items: center;
-    }
-    .modal-content {
-      background: white; padding: 20px; border-radius: 8px; width: 300px; position: relative;
-    }
-    .close {
-      position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 20px;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Benedictory Wood Panels - Multi-Product Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <header>
-    <h1>🏢 Benedictory Wood Panels</h1>
-    <p>Multi-Product Plywood Calculator</p>
-  </header>
+<body class="bg-gradient-to-br from-amber-50 to-orange-100 min-h-screen p-4">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-amber-900 mb-2">🏢 Benedictory Wood Panels</h1>
+            <p class="text-amber-700">Multi-Product Plywood Calculator</p>
+        </div>
 
-  <div class="container">
-    <!-- Left -->
-    <div class="card">
-      <h2>Client Details</h2>
-      <input type="text" id="clientName" placeholder="Enter client name">
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Calculator Form -->
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-6">
+                <!-- Client Details -->
+                <div class="mb-6">
+                    <h2 class="text-2xl font-semibold text-amber-900 mb-4">Client Details</h2>
+                    <input type="text" id="clientName" placeholder="Enter client name" class="w-full p-3 border-2 border-amber-200 rounded-lg focus:border-amber-500 focus:outline-none" />
+                </div>
 
-      <h2>Products</h2>
-      <button class="btn-add" onclick="openModal('productModal')">+ Add Product</button>
-      <div class="product-list" id="productList">No products added yet</div>
+                <!-- Products Section -->
+                <div class="mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-semibold text-amber-900">Products</h2>
+                        <button id="btnAddProduct" class="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white px-6 py-3 rounded-lg font-medium transition-all transform hover:scale-105">
+                            + Add Product
+                        </button>
+                    </div>
 
-      <h2>Additional Items</h2>
-      <button class="btn-item" onclick="openModal('itemModal')">+ Add Item</button>
-      <div class="item-list" id="itemList">No additional items yet</div>
+                    <div id="productsContainer" class="space-y-4"><!-- Products will be added here --></div>
 
-      <br>
-      <button class="btn-receipt">Generate Receipt</button>
-      <button class="btn-share">Share Receipt Link</button>
+                    <!-- Add first product message -->
+                    <div id="noProductsMessage" class="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+                        <p class="text-gray-600 mb-4">No products added yet</p>
+                        <button id="btnAddFirstProduct" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-medium">
+                            Add Your First Product
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Additional Items Section -->
+                <div class="mb-6 border-t-2 border-amber-200 pt-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-amber-900">Additional Items</h3>
+                        <button id="btnAddItem" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium">+ Add Item</button>
+                    </div>
+                    <div id="additionalItems" class="space-y-3"><!-- Additional items here --></div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button id="btnGenerateReceipt" class="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105">
+                        Generate Receipt
+                    </button>
+                    <button id="btnShareReceipt" class="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105">
+                        Share Receipt Link
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cost Breakdown Panel -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-2xl font-semibold text-amber-900 mb-6">Cost Breakdown</h2>
+
+                <div id="costBreakdown" class="space-y-4">
+                    <div class="text-center py-8 text-gray-500">Add products to see cost breakdown</div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t-2 border-amber-200">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-amber-800">Products Total:</span>
+                        <span id="displayProductsTotal" class="font-semibold text-amber-900">₹0</span>
+                    </div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-amber-800">Additional Items:</span>
+                        <span id="displayAdditionalTotal" class="font-semibold text-amber-900">₹0</span>
+                    </div>
+                    <hr class="border-amber-200 my-3" />
+                    <div class="flex justify-between items-center">
+                        <span class="text-lg font-bold text-amber-900">Grand Total:</span>
+                        <span id="displayGrandTotal" class="text-2xl font-bold text-green-600">₹0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Receipt Modal -->
+        <div id="receiptModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-screen overflow-y-auto">
+                <div class="p-8">
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-3xl font-bold text-gray-800">Professional Receipt</h2>
+                        <button id="btnCloseReceipt" class="text-gray-500 hover:text-gray-700 text-3xl font-bold">&times;</button>
+                    </div>
+
+                    <div id="receiptContent" class="space-y-6"><!-- Receipt content will be generated here --></div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                        <button id="btnPrintReceipt" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-all">🖨️ Print</button>
+                        <button id="btnDownloadReceipt" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-all">📄 Download</button>
+                        <button id="btnShareFromModal" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-6 rounded-lg transition-all">🔗 Share Link</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Share Link Modal -->
+        <div id="shareLinkModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl shadow-2xl max-w-md w-full">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Share Receipt Link</h3>
+                    <div class="mb-4">
+                        <input type="text" id="shareableLink" readonly class="w-full p-3 border-2 border-gray-200 rounded-lg bg-gray-50 text-sm" />
+                    </div>
+                    <div class="flex space-x-3">
+                        <button id="btnCopyLink" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">Copy Link</button>
+                        <button id="btnCloseShare" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Right -->
-    <div class="card">
-      <h2>Cost Breakdown</h2>
-      <p id="costDetails">Add products to see cost breakdown</p>
-      <hr>
-      <p>Products Total: ₹<span id="productTotal">0</span></p>
-      <p>Additional Items: ₹<span id="itemTotal">0</span></p>
-      <p class="total">Grand Total: ₹<span id="grandTotal">0</span></p>
-    </div>
-  </div>
+    <script>
+        // ---------- State ----------
+        let productsArray = [];
+        let additionalItemsArray = [];
+        let productCounter = 0;
+        let itemCounter = 0;
 
-  <!-- Product Modal -->
-  <div class="modal" id="productModal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal('productModal')">&times;</span>
-      <h3>Add Product</h3>
-      <input type="text" id="prodName" placeholder="Product Name">
-      <input type="number" id="prodQty" placeholder="Quantity">
-      <input type="number" id="prodPrice" placeholder="Price per unit">
-      <button onclick="addProduct()">Add</button>
-    </div>
-  </div>
+        // ---------- Helpers ----------
+        const fmtINR = (n) => `₹${Math.round(Number(n) || 0).toLocaleString('en-IN')}`;
 
-  <!-- Item Modal -->
-  <div class="modal" id="itemModal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal('itemModal')">&times;</span>
-      <h3>Add Item</h3>
-      <input type="text" id="itemName" placeholder="Item Name">
-      <input type="number" id="itemPrice" placeholder="Price">
-      <button onclick="addItem()">Add</button>
-    </div>
-  </div>
+        function parseSizeToSqft(sizeStr, quantity) {
+            if (!sizeStr) return null;
+            const clean = sizeStr.replace(/×/g, 'x').toLowerCase().trim();
+            const parts = clean.split('x').map((s) => parseFloat(s.trim()));
+            if (parts.length !== 2 || parts.some((v) => isNaN(v))) return null;
+            const [a, b] = parts;
+            // Heuristic: big numbers (e.g., 84 x 44) treated as inches => sqft = (a*b)/144
+            if (a > 10 && b > 10) {
+                return (a * b * (quantity || 1)) / 144;
+            }
+            // For small sizes (e.g., 8 x 4 feet) we DO NOT auto-calc; manual sqft field will be used
+            return null;
+        }
 
-  <script>
-    let products = [], items = [];
+        function show(el) { el.classList.remove('hidden'); el.classList.add('flex'); }
+        function hide(el) { el.classList.add('hidden'); el.classList.remove('flex'); }
 
-    function openModal(id) {
-      document.getElementById(id).style.display = "flex";
-    }
-    function closeModal(id) {
-      document.getElementById(id).style.display = "none";
-    }
-    window.onclick = function(e) {
-      if (e.target.classList.contains('modal')) e.target.style.display = "none";
-    }
+        // ---------- UI Builders ----------
+        function buildProductCard(id) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'bg-gradient-to-r from-purple-50 to-indigo-50 p-6 rounded-xl border-2 border-purple-200 shadow-md';
+            wrapper.id = `product-${id}`;
+            wrapper.innerHTML = `
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="text-xl font-bold text-purple-800">Product #${id}</h4>
+                    <button data-action="remove-product" data-id="${id}" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-all">Remove</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-purple-700 font-medium mb-2">Thickness</label>
+                        <input type="text" placeholder="19MM" class="product-thickness w-full p-3 border-2 border-purple-300 rounded-lg focus:border-purple-500 focus:outline-none" />
+                    </div>
+                    <div>
+                        <label class="block text-purple-700 font-medium mb-2">Quality/Grade</label>
+                        <input type="text" placeholder="Gurjan / FCFP / PF / Calibrated" class="product-quality w-full p-3 border-2 border-purple-300 rounded-lg focus:border-purple-500 focus:outline-none" />
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                        <label class="block text-purple-700 font-medium mb-2">Size</label>
+                        <input type="text" placeholder="8 x 4 or 84 x 44" class="product-size w-full p-3 border-2 border-purple-300 rounded-lg focus:border-purple-500 focus:outline-none" />
+                        <p class="text-xs text-purple-600 mt-1">8x4: manual sq ft | 84x44: auto</p>
+                    </div>
+                    <div>
+                        <label class="block text-purple-700 font-medium mb-2">Square Feet</label>
+                        <input type="number" placeholder="32" class="product-sqft w-full p-3 border-2 border-purple-300 rounded-lg focus:border-purple-500 focus:outline-none" min="0" step="0.01" />
+                        <p class="text-xs text-purple-600 mt-1">Auto-filled for large sizes</p>
+                    </div>
+                    <div>
+                        <label class="block text-purple-700 font-medium mb-2">Quantity</label>
+                        <input type="number" placeholder="1" class="product-quantity w-full p-3 border-2 border-purple-300 rounded-lg focus:border-purple-500 focus:outline-none" min="1" value="1" />
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-purple-700 font-medium mb-2">Price per Sq Ft (₹)</label>
+                        <input type="number" placeholder="45.00" class="product-price-per-sqft w-full p-3 border-2 border-purple-300 rounded-lg focus:border-purple-500 focus:outline-none" min="0" step="0.01" />
+                    </div>
+                    <div class="flex items-end">
+                        <div class="w-full bg-white p-3 rounded-lg border-2 border-green-300">
+                            <span class="text-green-700 font-medium">Product Total: </span>
+                            <span class="product-total font-bold text-green-600 text-lg">₹0</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            return wrapper;
+        }
 
-    function addProduct() {
-      const name = document.getElementById("prodName").value;
-      const qty = parseInt(document.getElementById("prodQty").value);
-      const price = parseFloat(document.getElementById("prodPrice").value);
-      if (!name || !qty || !price) return alert("Fill all fields");
-      products.push({ name, qty, price });
-      renderProducts();
-      closeModal('productModal');
-    }
+        function buildAdditionalItemRow(id) {
+            const row = document.createElement('div');
+            row.className = 'bg-gray-50 p-4 rounded-lg border border-gray-300';
+            row.id = `item-${id}`;
+            row.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                    <input type="text" placeholder="Item name" class="item-name p-3 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none" />
+                    <input type="number" placeholder="Price ₹" class="item-price p-3 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none" min="0" />
+                    <input type="number" placeholder="Qty" class="item-quantity p-3 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none" min="1" value="1" />
+                    <button data-action="remove-item" data-id="${id}" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg font-medium">Remove</button>
+                </div>
+            `;
+            return row;
+        }
 
-    function addItem() {
-      const name = document.getElementById("itemName").value;
-      const price = parseFloat(document.getElementById("itemPrice").value);
-      if (!name || !price) return alert("Fill all fields");
-      items.push({ name, price });
-      renderItems();
-      closeModal('itemModal');
-    }
+        // ---------- Actions ----------
+        function addProduct() {
+            productCounter++;
+            const card = buildProductCard(productCounter);
+            document.getElementById('productsContainer').appendChild(card);
+            document.getElementById('noProductsMessage').style.display = 'none';
+            updateProducts();
+        }
 
-    function renderProducts() {
-      const list = document.getElementById("productList");
-      list.innerHTML = "";
-      let total = 0;
-      products.forEach(p => {
-        const line = document.createElement("div");
-        line.className = "product-entry";
-        const cost = p.qty * p.price;
-        line.innerHTML = `<span>${p.name} (${p.qty} x ₹${p.price})</span><span>₹${cost}</span>`;
-        list.appendChild(line);
-        total += cost;
-      });
-      if (products.length === 0) list.innerHTML = "No products added yet";
-      document.getElementById("productTotal").innerText = total;
-      updateTotal();
-    }
+        function removeProduct(productId) {
+            const node = document.getElementById(`product-${productId}`);
+            if (node) node.remove();
+            updateProducts();
+            if (document.querySelectorAll('[id^="product-"]').length === 0) {
+                document.getElementById('noProductsMessage').style.display = 'block';
+            }
+        }
 
-    function renderItems() {
-      const list = document.getElementById("itemList");
-      list.innerHTML = "";
-      let total = 0;
-      items.forEach(i => {
-        const line = document.createElement("div");
-        line.className = "item-entry";
-        line.innerHTML = `<span>${i.name}</span><span>₹${i.price}</span>`;
-        list.appendChild(line);
-        total += i.price;
-      });
-      if (items.length === 0) list.innerHTML = "No additional items yet";
-      document.getElementById("itemTotal").innerText = total;
-      updateTotal();
-    }
+        function addItem() {
+            itemCounter++;
+            document.getElementById('additionalItems').appendChild(buildAdditionalItemRow(itemCounter));
+        }
 
-    function updateTotal() {
-      const productTotal = parseFloat(document.getElementById("productTotal").innerText);
-      const itemTotal = parseFloat(document.getElementById("itemTotal").innerText);
-      document.getElementById("grandTotal").innerText = productTotal + itemTotal;
-      document.getElementById("costDetails").innerText = "Updated cost breakdown:";
-    }
-  </script>
+        function removeItem(itemId) {
+            const node = document.getElementById(`item-${itemId}`);
+            if (node) node.remove();
+            updateAdditionalItems();
+        }
+
+        function updateProducts() {
+            productsArray = [];
+            const productDivs = document.querySelectorAll('[id^="product-"]');
+            productDivs.forEach((div) => {
+                const thickness = div.querySelector('.product-thickness').value.trim();
+                const quality = div.querySelector('.product-quality').value.trim();
+                const size = div.querySelector('.product-size').value.trim();
+                const sqftInput = div.querySelector('.product-sqft');
+                const pricePerSqft = parseFloat(div.querySelector('.product-price-per-sqft').value) || 0;
+                const quantity = parseInt(div.querySelector('.product-quantity').value) || 1;
+
+                let calculatedSqft = parseFloat(sqftInput.value) || 0;
+                let total = 0;
+
+                const autoSqft = parseSizeToSqft(size, quantity);
+                if (autoSqft) {
+                    calculatedSqft = autoSqft;
+                    sqftInput.value = autoSqft.toFixed(2);
+                }
+
+                total = calculatedSqft * pricePerSqft; // quantity already included if auto calc; for manual, sqft should be total sqft across qty
+
+                const totalSpan = div.querySelector('.product-total');
+                totalSpan.textContent = fmtINR(total);
+
+                if (thickness && quality && size && calculatedSqft > 0 && pricePerSqft > 0) {
+                    productsArray.push({ thickness, quality, size, sqft: calculatedSqft, pricePerSqft, quantity, total });
+                }
+            });
+            updateCostBreakdown();
+        }
+
+        function updateAdditionalItems() {
+            additionalItemsArray = [];
+            const itemDivs = document.querySelectorAll('[id^="item-"]');
+            itemDivs.forEach((div) => {
+                const name = div.querySelector('.item-name').value.trim();
+                const price = parseFloat(div.querySelector('.item-price').value) || 0;
+                const quantity = parseInt(div.querySelector('.item-quantity').value) || 1;
+                if (name && price > 0) additionalItemsArray.push({ name, price, quantity });
+            });
+            updateCostBreakdown();
+        }
+
+        function updateCostBreakdown() {
+            const costBreakdownDiv = document.getElementById('costBreakdown');
+            if (productsArray.length === 0) {
+                costBreakdownDiv.innerHTML = `<div class="text-center py-8 text-gray-500">Add products to see cost breakdown</div>`;
+            } else {
+                const blocks = productsArray
+                    .map((product, idx) => `
+                        <div class="bg-amber-50 rounded-lg p-4 border border-amber-200">
+                            <div class="font-semibold text-amber-900 mb-2">Product ${idx + 1}</div>
+                            <div class="text-sm space-y-1">
+                                <div class="flex justify-between"><span class="text-amber-700">${product.thickness} - ${product.quality}</span></div>
+                                <div class="flex justify-between"><span class="text-amber-700">Size: ${product.size} (${product.sqft.toFixed(2)} sq ft)</span></div>
+                                <div class="flex justify-between"><span class="text-amber-700">Rate: ₹${product.pricePerSqft.toFixed(2)}/sq ft</span></div>
+                                <div class="flex justify-between font-bold text-green-600 border-t border-amber-300 pt-1"><span>Total:</span><span>${fmtINR(product.total)}</span></div>
+                            </div>
+                        </div>`)
+                    .join('');
+                costBreakdownDiv.innerHTML = `<div class="space-y-3">${blocks}</div>`;
+            }
+
+            const productsTotal = productsArray.reduce((s, p) => s + p.total, 0);
+            const additionalTotal = additionalItemsArray.reduce((s, it) => s + it.price * it.quantity, 0);
+            const grandTotal = productsTotal + additionalTotal;
+
+            document.getElementById('displayProductsTotal').textContent = fmtINR(productsTotal);
+            document.getElementById('displayAdditionalTotal').textContent = fmtINR(additionalTotal).replace('₹', '₹');
+            document.getElementById('displayGrandTotal').textContent = fmtINR(grandTotal);
+        }
+
+        function generateReceipt() {
+            if (productsArray.length === 0) { alert('Please add at least one product first!'); return; }
+            const clientName = document.getElementById('clientName').value || 'Walk-in Customer';
+            const productsTotal = productsArray.reduce((s, p) => s + p.total, 0);
+            const additionalTotal = additionalItemsArray.reduce((s, it) => s + it.price * it.quantity, 0);
+            const grandTotal = productsTotal + additionalTotal;
+            const currentDate = new Date().toLocaleDateString('en-IN');
+            const receiptNo = 'PLY' + Date.now().toString().slice(-6);
+
+            document.getElementById('receiptContent').innerHTML = `
+                <div class="bg-gradient-to-br from-blue-50 to-indigo-100 p-8 rounded-2xl border border-gray-200">
+                    <div class="text-center border-b-2 border-indigo-200 pb-6 mb-8">
+                        <div class="bg-indigo-600 text-white p-4 rounded-xl mb-4 inline-block">
+                            <h1 class="text-3xl font-bold">🏢 BENEDICTORY WOOD PANELS</h1>
+                        </div>
+                        <p class="text-indigo-700 text-lg font-medium">Professional Plywood Solutions</p>
+                        <div class="grid grid-cols-2 gap-4 mt-6 text-sm bg-white p-4 rounded-lg">
+                            <div class="text-left"><span class="text-gray-600">Receipt No:</span><br /><strong class="text-indigo-600 text-lg">${receiptNo}</strong></div>
+                            <div class="text-right"><span class="text-gray-600">Date:</span><br /><strong class="text-indigo-600 text-lg">${currentDate}</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Client Details:</h3>
+                        <p class="text-gray-700"><strong>Name:</strong> ${clientName}</p>
+                    </div>
+
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold text-indigo-800 mb-4">📋 Products Ordered</h3>
+                        <div class="bg-white p-6 rounded-xl shadow-md overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead class="bg-purple-100">
+                                    <tr>
+                                        <th class="text-left p-3 font-semibold text-purple-800">Thickness</th>
+                                        <th class="text-left p-3 font-semibold text-purple-800">Quality/Grade</th>
+                                        <th class="text-left p-3 font-semibold text-purple-800">Size</th>
+                                        <th class="text-right p-3 font-semibold text-purple-800">Sq Ft</th>
+                                        <th class="text-right p-3 font-semibold text-purple-800">Rate/Sq Ft</th>
+                                        <th class="text-right p-3 font-semibold text-purple-800">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${productsArray
+                                        .map(
+                                            (p) => `
+                                            <tr class="border-b border-gray-200">
+                                                <td class="p-3 font-medium">${p.thickness}</td>
+                                                <td class="p-3">${p.quality}</td>
+                                                <td class="p-3">${p.size}</td>
+                                                <td class="p-3 text-right">${p.sqft.toFixed(2)}</td>
+                                                <td class="p-3 text-right">₹${p.pricePerSqft.toFixed(2)}</td>
+                                                <td class="p-3 text-right font-bold">${fmtINR(p.total)}</td>
+                                            </tr>`
+                                        )
+                                        .join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    ${additionalItemsArray.length > 0
+                        ? `
+                        <div class="mb-8">
+                            <h3 class="text-xl font-bold text-indigo-800 mb-4">📦 Additional Items</h3>
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                ${additionalItemsArray
+                                    .map(
+                                        (item) => `
+                                        <div class="flex justify-between items-center py-2 border-b border-gray-200 last:border-b-0">
+                                            <div><span class="font-medium">${item.name}</span><span class="text-gray-500 text-sm ml-2">(Qty: ${item.quantity})</span></div>
+                                            <span class="font-bold">${fmtINR(item.price * item.quantity)}</span>
+                                        </div>`
+                                    )
+                                    .join('')}
+                            </div>
+                        </div>`
+                        : ''}
+
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold text-indigo-800 mb-4">💰 Billing Summary</h3>
+                        <div class="bg-white p-6 rounded-xl shadow-md space-y-3">
+                            <div class="flex justify-between text-lg"><span class="text-gray-700">Products Total:</span><span class="font-bold">${fmtINR(productsTotal)}</span></div>
+                            ${additionalTotal > 0 ? `<div class="flex justify-between text-lg"><span class="text-gray-700">Additional Items:</span><span class="font-bold">${fmtINR(additionalTotal)}</span></div>` : ''}
+                            <div class="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-4 rounded-xl">
+                                <div class="flex justify-between items-center text-2xl font-bold"><span>💳 Grand Total:</span><span>${fmtINR(grandTotal)}</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center text-sm text-gray-600 border-t-2 border-gray-200 pt-4">
+                        <p>Thank you for your business!</p>
+                        <p class="mt-2">For queries, contact: +91-XXXXX-XXXXX | info@benedictorywoodpanels.com</p>
+                    </div>
+                </div>`;
+
+            show(document.getElementById('receiptModal'));
+        }
+
+        function shareReceipt() {
+            if (productsArray.length === 0) { alert('Please add at least one product first!'); return; }
+            const data = { client: document.getElementById('clientName').value || 'Walk-in Customer', products: productsArray, additionalItems: additionalItemsArray, timestamp: Date.now() };
+            const encoded = btoa(JSON.stringify(data));
+            const origin = window.location.origin || '';
+            const path = window.location.pathname || '';
+            const url = `${origin}${path}?receipt=${encoded}`;
+            const input = document.getElementById('shareableLink');
+            input.value = url;
+            show(document.getElementById('shareLinkModal'));
+        }
+
+        function printReceipt() { window.print(); }
+
+        function downloadReceipt() {
+            const receiptText = document.getElementById('receiptContent').innerText;
+            const blob = new Blob([receiptText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `plywood-receipt-${Date.now()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function copyLink() {
+            const linkInput = document.getElementById('shareableLink');
+            linkInput.select();
+            linkInput.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(linkInput.value).then(() => alert('✅ Link copied to clipboard!'));
+        }
+
+        // ---------- Event Wiring (no inline onclick anywhere) ----------
+        document.addEventListener('DOMContentLoaded', () => {
+            // Top buttons
+            document.getElementById('btnAddProduct').addEventListener('click', addProduct);
+            document.getElementById('btnAddFirstProduct').addEventListener('click', addProduct);
+            document.getElementById('btnAddItem').addEventListener('click', addItem);
+            document.getElementById('btnGenerateReceipt').addEventListener('click', generateReceipt);
+            document.getElementById('btnShareReceipt').addEventListener('click', shareReceipt);
+
+            // Receipt modal buttons
+            document.getElementById('btnCloseReceipt').addEventListener('click', () => hide(document.getElementById('receiptModal')));
+            document.getElementById('btnPrintReceipt').addEventListener('click', printReceipt);
+            document.getElementById('btnDownloadReceipt').addEventListener('click', downloadReceipt);
+            document.getElementById('btnShareFromModal').addEventListener('click', shareReceipt);
+
+            // Share modal buttons
+            document.getElementById('btnCloseShare').addEventListener('click', () => hide(document.getElementById('shareLinkModal')));
+            document.getElementById('btnCopyLink').addEventListener('click', copyLink);
+
+            // Click outside to close modals
+            document.getElementById('receiptModal').addEventListener('click', (e) => { if (e.target.id === 'receiptModal') hide(e.target); });
+            document.getElementById('shareLinkModal').addEventListener('click', (e) => { if (e.target.id === 'shareLinkModal') hide(e.target); });
+
+            // Event delegation: products container
+            const productsContainer = document.getElementById('productsContainer');
+            productsContainer.addEventListener('click', (e) => {
+                const btn = e.target.closest('[data-action="remove-product"]');
+                if (btn) removeProduct(Number(btn.getAttribute('data-id')));
+            });
+            productsContainer.addEventListener('input', (e) => {
+                if (e.target.closest('[id^="product-"]')) updateProducts();
+            });
+
+            // Event delegation: additional items
+            const itemsContainer = document.getElementById('additionalItems');
+            itemsContainer.addEventListener('click', (e) => {
+                const btn = e.target.closest('[data-action="remove-item"]');
+                if (btn) removeItem(Number(btn.getAttribute('data-id')));
+            });
+            itemsContainer.addEventListener('input', (e) => {
+                if (e.target.closest('[id^="item-"]')) updateAdditionalItems();
+            });
+
+            // Initial state
+            updateCostBreakdown();
+        });
+    </script>
 </body>
 </html>
