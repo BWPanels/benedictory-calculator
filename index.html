@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Benedictory Wood Panels</title>
+  <meta charset="UTF-8">
+  <title>Benedictory Wood Panels - Calculator</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -11,203 +10,158 @@
       margin: 0;
       padding: 0;
     }
+    header {
+      text-align: center;
+      padding: 20px;
+      color: #5a2a00;
+    }
     .container {
       display: flex;
       gap: 20px;
-      max-width: 1200px;
-      margin: 20px auto;
+      padding: 20px;
     }
     .card {
       background: #fff;
-      border-radius: 12px;
       padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       flex: 1;
-      box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
-    }
-    h1 {
-      text-align: center;
-      color: #6d3b00;
     }
     h2 {
       margin-top: 0;
-      color: #6d3b00;
+      color: #5a2a00;
     }
-    input {
-      width: 100%;
-      padding: 8px;
-      margin: 6px 0;
+    input, button {
+      padding: 10px;
+      margin: 5px 0;
       border-radius: 6px;
       border: 1px solid #ccc;
+      width: 100%;
     }
-    .btn {
-      padding: 8px 14px;
-      border: none;
-      border-radius: 8px;
+    button {
       cursor: pointer;
-      margin: 5px 0;
+      border: none;
+      color: #fff;
     }
-    .btn-add {
-      background: #6c63ff;
-      color: white;
-    }
-    .btn-add-item {
-      background: #2196f3;
-      color: white;
-    }
-    .btn-remove {
-      background: #f44336;
-      color: white;
-    }
-    .btn-green {
-      background: #4caf50;
-      color: white;
-      width: 48%;
-    }
-    .btn-blue {
-      background: #1976d2;
-      color: white;
-      width: 48%;
-    }
-    .product-row, .item-row {
+    .add-btn { background: #6a5acd; }
+    .green-btn { background: #28a745; }
+    .blue-btn { background: #007bff; }
+    .product, .item {
       display: flex;
       gap: 10px;
-      margin: 10px 0;
+      margin: 5px 0;
     }
-    .product-row input, .item-row input {
-      flex: 1;
-    }
-    .cost-box {
-      font-size: 18px;
-      margin: 10px 0;
-    }
-    .grand {
+    .summary {
       font-weight: bold;
-      color: green;
-      font-size: 20px;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>🏢 Benedictory Wood Panels</h1>
-  <p style="text-align:center; margin-top:-10px;">Multi-Product Plywood Calculator</p>
+  <header>
+    <h1>🏢 Benedictory Wood Panels</h1>
+    <p>Multi-Product Plywood Calculator</p>
+  </header>
 
   <div class="container">
-    <!-- Left Section -->
+    <!-- Left Side -->
     <div class="card">
       <h2>Client Details</h2>
-      <input type="text" id="clientName" placeholder="Enter client name" />
+      <input type="text" id="clientName" placeholder="Enter client name">
 
       <h2>Products</h2>
-      <div id="products"></div>
-      <button class="btn btn-add" id="addProduct">+ Add Product</button>
+      <div id="productList"></div>
+      <button class="add-btn" onclick="addProduct()">+ Add Product</button>
 
       <h2>Additional Items</h2>
-      <div id="items"></div>
-      <button class="btn btn-add-item" id="addItem">+ Add Item</button>
+      <div id="itemList"></div>
+      <button class="blue-btn" onclick="addItem()">+ Add Item</button>
 
-      <div style="margin-top:20px; display:flex; justify-content:space-between;">
-        <button class="btn btn-green" id="generateReceipt">Generate Receipt</button>
-        <button class="btn btn-blue">Share Receipt Link</button>
-      </div>
+      <button class="green-btn" onclick="generateReceipt()">Generate Receipt</button>
     </div>
 
-    <!-- Right Section -->
+    <!-- Right Side -->
     <div class="card">
       <h2>Cost Breakdown</h2>
-      <div class="cost-box">Products Total: <span id="productsTotal">₹0</span></div>
-      <div class="cost-box">Additional Items: <span id="itemsTotal">₹0</span></div>
-      <hr/>
-      <div class="cost-box grand">Grand Total: <span id="grandTotal">₹0</span></div>
+      <div id="summary">
+        Products Total: ₹0 <br>
+        Additional Items: ₹0 <br>
+        <span class="summary">Grand Total: ₹0</span>
+      </div>
     </div>
   </div>
 
   <script>
-    const productsContainer = document.getElementById("products");
-    const itemsContainer = document.getElementById("items");
+    let products = [];
+    let items = [];
 
-    document.getElementById("addProduct").addEventListener("click", () => {
-      const div = document.createElement("div");
-      div.classList.add("product-row");
-      div.innerHTML = `
-        <input type="text" placeholder="Product Name"/>
-        <input type="number" placeholder="Qty"/>
-        <input type="number" placeholder="Price"/>
-        <button class="btn btn-remove">X</button>
-      `;
-      div.querySelector(".btn-remove").addEventListener("click", () => {
-        div.remove();
-        updateTotal();
-      });
-      div.querySelectorAll("input").forEach(inp => inp.addEventListener("input", updateTotal));
-      productsContainer.appendChild(div);
-    });
+    function addProduct() {
+      const name = prompt("Enter product name:");
+      const price = parseFloat(prompt("Enter price per unit:"));
+      const qty = parseInt(prompt("Enter quantity:"));
 
-    document.getElementById("addItem").addEventListener("click", () => {
-      const div = document.createElement("div");
-      div.classList.add("item-row");
-      div.innerHTML = `
-        <input type="text" placeholder="Item Name"/>
-        <input type="number" placeholder="Cost"/>
-        <button class="btn btn-remove">X</button>
-      `;
-      div.querySelector(".btn-remove").addEventListener("click", () => {
-        div.remove();
-        updateTotal();
-      });
-      div.querySelectorAll("input").forEach(inp => inp.addEventListener("input", updateTotal));
-      itemsContainer.appendChild(div);
-    });
-
-    function updateTotal() {
-      let productTotal = 0;
-      productsContainer.querySelectorAll(".product-row").forEach(row => {
-        const qty = parseFloat(row.children[1].value) || 0;
-        const price = parseFloat(row.children[2].value) || 0;
-        productTotal += qty * price;
-      });
-
-      let itemTotal = 0;
-      itemsContainer.querySelectorAll(".item-row").forEach(row => {
-        const cost = parseFloat(row.children[1].value) || 0;
-        itemTotal += cost;
-      });
-
-      document.getElementById("productsTotal").innerText = "₹" + productTotal;
-      document.getElementById("itemsTotal").innerText = "₹" + itemTotal;
-      document.getElementById("grandTotal").innerText = "₹" + (productTotal + itemTotal);
+      if(name && price && qty) {
+        products.push({name, price, qty});
+        renderProducts();
+        updateSummary();
+      }
     }
 
-    document.getElementById("generateReceipt").addEventListener("click", () => {
-      const client = document.getElementById("clientName").value || "N/A";
-      const products = [];
-      productsContainer.querySelectorAll(".product-row").forEach(row => {
-        products.push({
-          name: row.children[0].value,
-          qty: row.children[1].value,
-          price: row.children[2].value
-        });
-      });
+    function addItem() {
+      const name = prompt("Enter item name:");
+      const cost = parseFloat(prompt("Enter cost:"));
 
-      const items = [];
-      itemsContainer.querySelectorAll(".item-row").forEach(row => {
-        items.push({
-          name: row.children[0].value,
-          cost: row.children[1].value
-        });
-      });
+      if(name && cost) {
+        items.push({name, cost});
+        renderItems();
+        updateSummary();
+      }
+    }
 
-      let receipt = `Receipt for ${client}\n\nProducts:\n`;
-      products.forEach(p => {
-        receipt += `${p.name} - Qty: ${p.qty}, Price: ₹${p.price}, Total: ₹${p.qty * p.price}\n`;
+    function renderProducts() {
+      let html = "";
+      products.forEach((p, i) => {
+        html += `<div class="product">${p.name} - ₹${p.price} × ${p.qty} = ₹${p.price*p.qty}</div>`;
       });
-      receipt += `\nAdditional Items:\n`;
-      items.forEach(i => {
-        receipt += `${i.name} - ₹${i.cost}\n`;
-      });
-      receipt += `\nGrand Total: ${document.getElementById("grandTotal").innerText}`;
+      document.getElementById("productList").innerHTML = html;
+    }
 
-      alert(receipt);
-    });
+    function renderItems() {
+      let html = "";
+      items.forEach((it, i) => {
+        html += `<div class="item">${it.name} - ₹${it.cost}</div>`;
+      });
+      document.getElementById("itemList").innerHTML = html;
+    }
+
+    function updateSummary() {
+      let productTotal = products.reduce((sum,p)=>sum+(p.price*p.qty),0);
+      let itemTotal = items.reduce((sum,it)=>sum+it.cost,0);
+      let grand = productTotal+itemTotal;
+
+      document.getElementById("summary").innerHTML = `
+        Products Total: ₹${productTotal} <br>
+        Additional Items: ₹${itemTotal} <br>
+        <span class="summary">Grand Total: ₹${grand}</span>
+      `;
+    }
+
+    function generateReceipt() {
+      const client = document.getElementById("clientName").value || "Unknown Client";
+      let text = `Receipt for ${client}\n\nProducts:\n`;
+      products.forEach(p=>{
+        text += `${p.name} - ₹${p.price} × ${p.qty} = ₹${p.price*p.qty}\n`;
+      });
+      text += `\nAdditional Items:\n`;
+      items.forEach(it=>{
+        text += `${it.name} - ₹${it.cost}\n`;
+      });
+      let productTotal = products.reduce((sum,p)=>sum+(p.price*p.qty),0);
+      let itemTotal = items.reduce((sum,it)=>sum+it.cost,0);
+      text += `\nGrand Total = ₹${productTotal+itemTotal}`;
+
+      alert(text);
+    }
   </script>
 </body>
 </html>
