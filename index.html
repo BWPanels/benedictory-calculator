@@ -54,9 +54,11 @@
       background: rgba(0,0,0,0.5); justify-content: center; align-items: center;
     }
     .modal-content {
-      background: white; padding: 20px; border-radius: 8px; width: 300px;
+      background: white; padding: 20px; border-radius: 8px; width: 300px; position: relative;
     }
-    .close { float: right; cursor: pointer; font-size: 20px; }
+    .close {
+      position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 20px;
+    }
   </style>
 </head>
 <body>
@@ -72,11 +74,11 @@
       <input type="text" id="clientName" placeholder="Enter client name">
 
       <h2>Products</h2>
-      <button class="btn-add" onclick="openModal('product')">+ Add Product</button>
+      <button class="btn-add" onclick="openModal('productModal')">+ Add Product</button>
       <div class="product-list" id="productList">No products added yet</div>
 
       <h2>Additional Items</h2>
-      <button class="btn-item" onclick="openModal('item')">+ Add Item</button>
+      <button class="btn-item" onclick="openModal('itemModal')">+ Add Item</button>
       <div class="item-list" id="itemList">No additional items yet</div>
 
       <br>
@@ -98,7 +100,7 @@
   <!-- Product Modal -->
   <div class="modal" id="productModal">
     <div class="modal-content">
-      <span class="close" onclick="closeModal('product')">&times;</span>
+      <span class="close" onclick="closeModal('productModal')">&times;</span>
       <h3>Add Product</h3>
       <input type="text" id="prodName" placeholder="Product Name">
       <input type="number" id="prodQty" placeholder="Quantity">
@@ -110,7 +112,7 @@
   <!-- Item Modal -->
   <div class="modal" id="itemModal">
     <div class="modal-content">
-      <span class="close" onclick="closeModal('item')">&times;</span>
+      <span class="close" onclick="closeModal('itemModal')">&times;</span>
       <h3>Add Item</h3>
       <input type="text" id="itemName" placeholder="Item Name">
       <input type="number" id="itemPrice" placeholder="Price">
@@ -121,11 +123,14 @@
   <script>
     let products = [], items = [];
 
-    function openModal(type) {
-      document.getElementById(type + "Modal").style.display = "flex";
+    function openModal(id) {
+      document.getElementById(id).style.display = "flex";
     }
-    function closeModal(type) {
-      document.getElementById(type + "Modal").style.display = "none";
+    function closeModal(id) {
+      document.getElementById(id).style.display = "none";
+    }
+    window.onclick = function(e) {
+      if (e.target.classList.contains('modal')) e.target.style.display = "none";
     }
 
     function addProduct() {
@@ -135,7 +140,7 @@
       if (!name || !qty || !price) return alert("Fill all fields");
       products.push({ name, qty, price });
       renderProducts();
-      closeModal('product');
+      closeModal('productModal');
     }
 
     function addItem() {
@@ -144,7 +149,7 @@
       if (!name || !price) return alert("Fill all fields");
       items.push({ name, price });
       renderItems();
-      closeModal('item');
+      closeModal('itemModal');
     }
 
     function renderProducts() {
@@ -159,6 +164,7 @@
         list.appendChild(line);
         total += cost;
       });
+      if (products.length === 0) list.innerHTML = "No products added yet";
       document.getElementById("productTotal").innerText = total;
       updateTotal();
     }
@@ -174,6 +180,7 @@
         list.appendChild(line);
         total += i.price;
       });
+      if (items.length === 0) list.innerHTML = "No additional items yet";
       document.getElementById("itemTotal").innerText = total;
       updateTotal();
     }
