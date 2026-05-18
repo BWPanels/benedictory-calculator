@@ -1,95 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Benedictory Invoice Calculator</title>
+<title>Benedictory Invoice</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
+
 body{
-    background:#f5f5f5;
-    font-family:Arial, sans-serif;
+    background:#edf2f7;
+    font-family:Arial,sans-serif;
+    padding:30px;
 }
-.card{
+
+.invoice{
     background:white;
-    border-radius:16px;
-    padding:20px;
-    box-shadow:0 2px 10px rgba(0,0,0,0.08);
+    max-width:1200px;
+    margin:auto;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 4px 20px rgba(0,0,0,0.15);
 }
+
+.top{
+    background:#dce2db;
+    height:230px;
+    position:relative;
+    overflow:hidden;
+}
+
+.wave{
+    position:absolute;
+    bottom:-40px;
+    left:0;
+    width:100%;
+    height:120px;
+    background:white;
+    border-radius:50% 50% 0 0;
+}
+
+.logo{
+    position:absolute;
+    top:50px;
+    left:50px;
+}
+
+.logo h1{
+    font-size:52px;
+    color:#c9a24d;
+    font-weight:bold;
+    letter-spacing:3px;
+}
+
+.logo p{
+    color:#c9a24d;
+    letter-spacing:5px;
+    font-size:13px;
+}
+
+.content{
+    padding:40px;
+}
+
+.heading{
+    font-size:30px;
+    font-weight:bold;
+    color:#065f46;
+    margin-bottom:20px;
+}
+
 table{
     width:100%;
     border-collapse:collapse;
+    margin-top:20px;
 }
-table th,table td{
-    border:1px solid #d1d5db;
-    padding:10px;
-    text-align:center;
-}
+
 table th{
     background:#065f46;
     color:white;
+    padding:12px;
+    border:1px solid #d1d5db;
+    font-size:14px;
 }
+
+table td{
+    border:1px solid #d1d5db;
+    padding:10px;
+}
+
 input{
     width:100%;
-    border:1px solid #d1d5db;
-    padding:8px;
-    border-radius:6px;
+    padding:7px;
+    border:none;
+    outline:none;
 }
-.btn{
+
+.summary{
+    margin-top:35px;
+    width:380px;
+    margin-left:auto;
+}
+
+.summary div{
+    display:flex;
+    justify-content:space-between;
+    padding:10px 0;
+    border-bottom:1px solid #ddd;
+}
+
+.summary h2{
+    font-size:24px;
+    color:#065f46;
+    margin-bottom:15px;
+}
+
+.btns{
+    margin-top:30px;
+    display:flex;
+    gap:15px;
+}
+
+button{
     background:#065f46;
     color:white;
-    padding:10px 18px;
+    padding:12px 22px;
+    border:none;
     border-radius:8px;
     cursor:pointer;
+    font-weight:bold;
 }
-.btn:hover{
+
+button:hover{
     background:#047857;
 }
-.summary-box{
-    background:#ecfdf5;
-    padding:12px;
-    border-radius:10px;
+
+@media print{
+    .btns{
+        display:none;
+    }
+
+    body{
+        background:white;
+        padding:0;
+    }
+
+    .invoice{
+        box-shadow:none;
+    }
 }
+
 </style>
 
 </head>
 
 <body>
 
-<div class="max-w-7xl mx-auto p-6">
+<div class="invoice">
 
-<div class="card mb-6">
+<div class="top">
 
-<h1 class="text-3xl font-bold text-emerald-800 mb-2">
-Benedictory Wood Panels
-</h1>
+<div class="logo">
 
-<p class="text-gray-600">
-Invoice & Weight Calculator
+<h1>BENEDICTORY</h1>
+
+<p>THE FUTURE OF NEXT GEN</p>
+
+</div>
+
+<div class="wave"></div>
+
+</div>
+
+<div class="content">
+
+<div class="flex justify-between items-center">
+
+<div>
+
+<h2 class="heading">
+INVOICE
+</h2>
+
+<p>
+Date :
+<input type="date" id="invoiceDate" class="border px-2 py-1 mt-1">
 </p>
 
 </div>
 
-<div class="card">
+<div>
 
-<div class="flex justify-between items-center mb-4">
-
-<h2 class="text-2xl font-bold text-gray-700">
-Product Details
-</h2>
-
-<button class="btn" onclick="addRow()">
-+ Add Product
-</button>
+<p>
+Client Name :
+<input type="text" placeholder="Enter Client Name" class="border px-2 py-1 mt-1">
+</p>
 
 </div>
 
-<div class="overflow-auto">
+</div>
 
-<table id="productTable">
+<table id="invoiceTable">
 
 <thead>
 
@@ -97,117 +210,51 @@ Product Details
 <th>Thickness</th>
 <th>Quality</th>
 <th>Size</th>
+<th>Quantity</th>
 <th>SQF</th>
+<th>Weight</th>
 <th>Rate</th>
 <th>Amount</th>
-<th>Weight</th>
 <th>Remove</th>
 </tr>
 
 </thead>
 
-<tbody id="tableBody">
+<tbody id="tbody">
 
 </tbody>
 
 </table>
 
-</div>
+<div class="btns">
 
-</div>
+<button onclick="addRow()">
++ Add Product
+</button>
 
-<div class="grid md:grid-cols-2 gap-6 mt-6">
-
-<div class="card">
-
-<h2 class="text-2xl font-bold mb-4 text-gray-700">
-Billing Calculation
-</h2>
-
-<div class="space-y-4">
-
-<div>
-<label>Total Product Amount</label>
-<input type="text" id="productAmount" readonly>
-</div>
-
-<div>
-<label>Billing %</label>
-<input type="number" id="billingPercent" value="40" oninput="calculateFinal()">
-</div>
-
-<div>
-<label>Billing Amount</label>
-<input type="text" id="billingAmount" readonly>
-</div>
-
-<div>
-<label>GST 18%</label>
-<input type="text" id="gstAmount" readonly>
-</div>
-
-<div>
-<label>Transferable Amount</label>
-<input type="text" id="transferableAmount" readonly>
-</div>
-
-<div>
-<label>Other Amount</label>
-<input type="text" id="otherAmount" readonly>
-</div>
-
-<div>
-<label>Total Order Amount</label>
-<input type="text" id="finalAmount" readonly>
-</div>
-
-<div>
-<label>Total Weight</label>
-<input type="text" id="totalWeight" readonly>
-</div>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<h2 class="text-2xl font-bold mb-4 text-gray-700">
-Weight Rules
-</h2>
-
-<div class="summary-box mb-4">
-
-<h3 class="font-bold text-emerald-700 mb-2">
-Popular Weight
-</h3>
-
-<p>6mm = 200g</p>
-<p>9mm = 400g</p>
-<p>12mm = 570g</p>
-<p>18mm = 900g</p>
-
-</div>
-
-<div class="summary-box">
-
-<h3 class="font-bold text-red-700 mb-2">
-ALT Weight
-</h3>
-
-<p>6mm = 300g</p>
-<p>9mm = 14.5kg</p>
-<p>12mm = 21kg</p>
-<p>18mm = 1.3kg</p>
-
-</div>
-
-<div class="mt-6">
-
-<button class="btn w-full" onclick="downloadInvoice()">
+<button onclick="window.print()">
 Download Invoice
 </button>
 
+</div>
+
+<div class="summary">
+
+<h2>Summary</h2>
+
+<div>
+<span>Total SQF</span>
+<span id="totalSQF">0</span>
+</div>
+
+<div>
+<span>Total Weight</span>
+<span id="totalWeight">0 KG</span>
+</div>
+
+<div>
+<span>Total Amount</span>
+<span id="totalAmount">₹0</span>
 </div>
 
 </div>
@@ -225,27 +272,23 @@ const row = document.createElement("tr");
 row.innerHTML = `
 
 <td>
-<input type="text" class="thickness" placeholder="18mm" oninput="calculateRow(this)">
+<input type="text" class="thickness" placeholder="18mm" oninput="calculate(this)">
 </td>
 
 <td>
-<input type="text" class="quality" placeholder="Gurjan Face / ALT" oninput="calculateRow(this)">
+<input type="text" class="quality" placeholder="ALT / Gurjan Face" oninput="calculate(this)">
 </td>
 
 <td>
-<input type="text" class="size" placeholder="8x4">
+<input type="text" placeholder="8x4">
 </td>
 
 <td>
-<input type="number" class="sqf" placeholder="100" oninput="calculateRow(this)">
+<input type="number" class="qty" value="1" oninput="calculate(this)">
 </td>
 
 <td>
-<input type="number" class="rate" placeholder="50" oninput="calculateRow(this)">
-</td>
-
-<td>
-<input type="text" class="amount" readonly>
+<input type="number" class="sqf" placeholder="32" oninput="calculate(this)">
 </td>
 
 <td>
@@ -253,14 +296,22 @@ row.innerHTML = `
 </td>
 
 <td>
-<button class="btn bg-red-600" onclick="removeRow(this)">
+<input type="number" class="rate" placeholder="50" oninput="calculate(this)">
+</td>
+
+<td>
+<input type="text" class="amount" readonly>
+</td>
+
+<td>
+<button onclick="removeRow(this)">
 X
 </button>
 </td>
 
 `;
 
-document.getElementById("tableBody").appendChild(row);
+document.getElementById("tbody").appendChild(row);
 
 }
 
@@ -268,11 +319,11 @@ function removeRow(btn){
 
 btn.parentElement.parentElement.remove();
 
-calculateFinal();
+updateTotals();
 
 }
 
-function calculateRow(el){
+function calculate(el){
 
 const row = el.parentElement.parentElement;
 
@@ -282,137 +333,118 @@ row.querySelector(".thickness").value.toLowerCase();
 const quality =
 row.querySelector(".quality").value.toLowerCase();
 
+const qty =
+Number(row.querySelector(".qty").value || 0);
+
 const sqf =
 Number(row.querySelector(".sqf").value || 0);
 
 const rate =
 Number(row.querySelector(".rate").value || 0);
 
-const amount = sqf * rate;
-
-row.querySelector(".amount").value =
-amount.toFixed(2);
-
-let weightPerSqf = 0;
+let weightPerSQF = 0;
 
 const isALT = quality.includes("alt");
 
 if(isALT){
 
 if(thickness.includes("6")){
-weightPerSqf = 0.300;
+weightPerSQF = 0.300;
 }
 
 else if(thickness.includes("9")){
-weightPerSqf = 14.5;
+weightPerSQF = 14.5;
 }
 
 else if(thickness.includes("12")){
-weightPerSqf = 21;
+weightPerSQF = 21;
 }
 
 else if(thickness.includes("18")){
-weightPerSqf = 1.3;
+weightPerSQF = 1.3;
 }
 
 }else{
 
 if(thickness.includes("6")){
-weightPerSqf = 0.200;
+weightPerSQF = 0.200;
 }
 
 else if(thickness.includes("9")){
-weightPerSqf = 0.400;
+weightPerSQF = 0.400;
 }
 
 else if(thickness.includes("12")){
-weightPerSqf = 0.570;
+weightPerSQF = 0.570;
 }
 
 else if(thickness.includes("18")){
-weightPerSqf = 0.900;
+weightPerSQF = 0.900;
 }
 
 }
 
-const totalWeight = sqf * weightPerSqf;
+const totalSQF = qty * sqf;
+
+const totalWeight =
+totalSQF * weightPerSQF;
+
+const amount =
+totalSQF * rate;
 
 row.querySelector(".weight").value =
-totalWeight.toFixed(2)+" kg";
+totalWeight.toFixed(2)+" KG";
 
-calculateFinal();
+row.querySelector(".amount").value =
+"₹"+amount.toLocaleString("en-IN");
+
+updateTotals();
 
 }
 
-function calculateFinal(){
+function updateTotals(){
 
-const amounts =
-document.querySelectorAll(".amount");
-
-const weights =
-document.querySelectorAll(".weight");
-
+let totalSQF = 0;
+let totalWeight = 0;
 let totalAmount = 0;
 
-let totalWeight = 0;
+document.querySelectorAll("#tbody tr")
+.forEach(row=>{
 
-amounts.forEach(x=>{
+const qty =
+Number(row.querySelector(".qty").value || 0);
 
-totalAmount += Number(x.value || 0);
+const sqf =
+Number(row.querySelector(".sqf").value || 0);
+
+const weight =
+Number(
+(row.querySelector(".weight").value || "0")
+.replace(" KG","")
+);
+
+const amount =
+Number(
+(row.querySelector(".amount").value || "0")
+.replace(/[^0-9.]/g,"")
+);
+
+totalSQF += qty * sqf;
+
+totalWeight += weight;
+
+totalAmount += amount;
 
 });
 
-weights.forEach(x=>{
+document.getElementById("totalSQF").innerText =
+totalSQF.toFixed(2);
 
-totalWeight +=
-Number((x.value || "0").replace(" kg",""));
+document.getElementById("totalWeight").innerText =
+totalWeight.toFixed(2)+" KG";
 
-});
-
-document.getElementById("productAmount").value =
-totalAmount.toFixed(2);
-
-document.getElementById("totalWeight").value =
-totalWeight.toFixed(2)+" kg";
-
-const billingPercent =
-Number(document.getElementById("billingPercent").value || 0);
-
-const billingAmount =
-(totalAmount * billingPercent) / 100;
-
-const gstAmount =
-billingAmount * 0.18;
-
-const transferable =
-billingAmount + gstAmount;
-
-const otherAmount =
-totalAmount - billingAmount;
-
-const finalAmount =
-transferable + otherAmount;
-
-document.getElementById("billingAmount").value =
-billingAmount.toFixed(2);
-
-document.getElementById("gstAmount").value =
-gstAmount.toFixed(2);
-
-document.getElementById("transferableAmount").value =
-transferable.toFixed(2);
-
-document.getElementById("otherAmount").value =
-otherAmount.toFixed(2);
-
-document.getElementById("finalAmount").value =
-finalAmount.toFixed(2);
-
-}
-
-function downloadInvoice(){
-
-window.print();
+document.getElementById("totalAmount").innerText =
+"₹"+totalAmount.toLocaleString("en-IN");
 
 }
 
