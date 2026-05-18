@@ -1,579 +1,384 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Benedictory Invoice</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
-
-body{
-    background:#edf2f7;
-    font-family:Arial,sans-serif;
-    padding:30px;
-}
-
-.invoice{
-    background:white;
-    max-width:1300px;
-    margin:auto;
-    border-radius:18px;
-    overflow:hidden;
-    box-shadow:0 4px 20px rgba(0,0,0,0.15);
-}
-
-.top{
-    background:#dce2db;
-    height:240px;
-    position:relative;
-    overflow:hidden;
-}
-
-.wave{
-    position:absolute;
-    bottom:-40px;
-    left:0;
-    width:100%;
-    height:120px;
-    background:white;
-    border-radius:50% 50% 0 0;
-}
-
-.logo{
-    position:absolute;
-    top:20px;
-    left:40px;
-}
-
-.logo img{
-    width:320px;
-}
-
-.content{
-    padding:40px;
-}
-
-.heading{
-    font-size:34px;
-    font-weight:bold;
-    color:#065f46;
-    margin-bottom:25px;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:20px;
-}
-
-table th{
-    background:#065f46;
-    color:white;
-    padding:12px;
-    border:1px solid #d1d5db;
-    font-size:15px;
-}
-
-table td{
-    border:1px solid #d1d5db;
-    padding:8px;
-}
-
-input{
-    width:100%;
-    padding:8px;
-    outline:none;
-}
-
-.quality-heading{
-    font-size:32px;
-    font-style:italic;
-    font-weight:bold;
-    text-align:center;
-    color:#7a7d2f;
-    padding:15px;
-    border:1px solid #000;
-}
-
-.summary{
-    margin-top:35px;
-    width:450px;
-    margin-left:auto;
-}
-
-.summary div{
-    display:flex;
-    justify-content:space-between;
-    padding:10px 0;
-    border-bottom:1px solid #ddd;
-    font-size:17px;
-}
-
-.summary h2{
-    font-size:26px;
-    color:#065f46;
-    margin-bottom:15px;
-}
-
-.btns{
-    margin-top:30px;
-    display:flex;
-    gap:15px;
-}
-
-button{
-    background:#065f46;
-    color:white;
-    padding:12px 22px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-button:hover{
-    background:#047857;
-}
-
-@media print{
-
-    .btns{
-        display:none;
-    }
-
     body{
+        background:#f3f4f6;
+        font-family: Arial, sans-serif;
+    }
+
+    .invoice-box{
+        width:1200px;
+        margin:auto;
         background:white;
-        padding:0;
+        padding:30px;
     }
 
-    .invoice{
-        box-shadow:none;
+    table{
+        width:100%;
+        border-collapse:collapse;
+        margin-top:10px;
     }
 
-}
+    th,td{
+        border:1px solid #000;
+        padding:10px;
+        text-align:center;
+        font-size:15px;
+    }
 
+    th{
+        background:#d8d8d8;
+        font-size:20px;
+        color:#7a7f2c;
+        font-style:italic;
+    }
+
+    .quality-heading{
+        font-size:28px;
+        font-style:italic;
+        color:#7a7f2c;
+        text-align:center;
+        margin-top:30px;
+        margin-bottom:10px;
+        font-weight:bold;
+        text-decoration:underline;
+    }
+
+    .summary-box{
+        width:450px;
+        margin-left:auto;
+        margin-top:30px;
+    }
+
+    .summary-box td{
+        text-align:left;
+        font-size:18px;
+    }
+
+    .download-btn{
+        background:#166534;
+        color:white;
+        padding:12px 25px;
+        border:none;
+        border-radius:8px;
+        cursor:pointer;
+        font-size:18px;
+        margin-top:20px;
+    }
+
+    input{
+        width:100%;
+        border:none;
+        outline:none;
+        text-align:center;
+        background:transparent;
+    }
+
+    @media print{
+        .no-print{
+            display:none;
+        }
+    }
 </style>
-
 </head>
 
 <body>
 
-<div class="invoice">
+<div class="invoice-box" id="invoice">
 
-<div class="top">
+    <!-- LOGO -->
+    <div style="text-align:center;">
+        <img src="https://i.imgur.com/yY0QY8h.png" style="width:300px;">
+    </div>
 
-<div class="logo">
+    <!-- QUALITY -->
+    <div class="quality-heading">
+        <input type="text" id="qualityName"
+        value="Door/Gurjan face /DC/Pine Frame/Lakkad Filler">
+    </div>
 
-<img src="LOGO CUT OUT.png">
+    <!-- TABLE -->
+    <table id="invoiceTable">
+        <thead>
+            <tr>
+                <th>Thickness</th>
+                <th>Size</th>
+                <th>Quantity</th>
+                <th>Quantity SQF</th>
+                <th>Weight</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
 
-</div>
+        <tbody id="tbody">
 
-<div class="wave"></div>
+            <tr>
+                <td>
+                    <input type="text" class="thickness" value="18mm">
+                </td>
 
-</div>
+                <td>
+                    <input type="text" value="8x4">
+                </td>
 
-<div class="content">
+                <td>
+                    <input type="number" class="qty" value="10">
+                </td>
 
-<div class="flex justify-between items-center mb-6">
+                <td>
+                    <input type="number" value="320">
+                </td>
 
-<div>
+                <td class="weight">0</td>
 
-<h2 class="heading">
-INVOICE
-</h2>
+                <td>
+                    <input type="number" class="amount" value="50000">
+                </td>
+            </tr>
 
-<p>
-Date :
-<input type="date" id="invoiceDate"
-style="border:1px solid #ccc;">
-</p>
+        </tbody>
+    </table>
 
-</div>
+    <!-- BUTTONS -->
+    <div class="no-print" style="margin-top:15px;">
 
-<div>
+        <button onclick="addRow()"
+        class="download-btn">
+            + Add Row
+        </button>
 
-<p>
-Client Name :
-<input type="text"
-placeholder="Enter Client Name"
-style="border:1px solid #ccc;">
-</p>
+    </div>
 
-</div>
+    <!-- SUMMARY -->
+    <table class="summary-box">
 
-</div>
+        <tr>
+            <td><b>Total Weight</b></td>
+            <td id="totalWeight">0 KG</td>
+        </tr>
 
-<!-- QUALITY NAME -->
+        <tr>
+            <td><b>Product Amount</b></td>
+            <td id="productAmount">₹0</td>
+        </tr>
 
-<div style="margin-bottom:25px;">
+        <tr>
+            <td><b>Billing %</b></td>
+            <td>
+                <input type="number" id="billingPercent"
+                value="40">
+            </td>
+        </tr>
 
-<input
-type="text"
-id="qualityName"
-placeholder="Door/Gurjan face /DC/Pine Frame/Lakkad Filler"
-class="quality-heading"
->
+        <tr>
+            <td><b>Billing Amount</b></td>
+            <td id="billingAmount">₹0</td>
+        </tr>
 
-</div>
+        <tr>
+            <td><b>GST 18%</b></td>
+            <td id="gstAmount">₹0</td>
+        </tr>
 
-<table id="invoiceTable">
+        <tr>
+            <td><b>Transferable Amount</b></td>
+            <td id="transferableAmount">₹0</td>
+        </tr>
 
-<thead>
+        <tr>
+            <td><b>Other Amount</b></td>
+            <td id="otherAmount">₹0</td>
+        </tr>
 
-<tr>
-<th>Thickness</th>
-<th>Size</th>
-<th>Quantity</th>
-<th>Quantity SQF</th>
-<th>Weight</th>
-<th>Rate</th>
-<th>Amount</th>
-<th>Remove</th>
-</tr>
+        <tr>
+            <td><b>Total Order Amount</b></td>
+            <td id="finalAmount">₹0</td>
+        </tr>
 
-</thead>
+    </table>
 
-<tbody id="tbody">
+    <!-- DOWNLOAD -->
+    <div class="no-print" style="text-align:center;">
 
-</tbody>
+        <button onclick="window.print()"
+        class="download-btn">
+            Download Invoice
+        </button>
 
-</table>
-
-<div class="btns">
-
-<button onclick="addRow()">
-+ Add Product
-</button>
-
-<button onclick="window.print()">
-Download Invoice
-</button>
-
-</div>
-
-<!-- SUMMARY -->
-
-<div class="summary">
-
-<h2>
-Summary
-</h2>
-
-<div>
-<span>Total SQF</span>
-<span id="totalSQF">0</span>
-</div>
-
-<div>
-<span>Total Weight</span>
-<span id="totalWeight">0 KG</span>
-</div>
-
-<div>
-<span>Total Product Amount</span>
-<span id="totalAmount">₹0</span>
-</div>
-
-<div>
-<span>Billing %</span>
-<span>
-<input type="number"
-id="billingPercent"
-value="40"
-oninput="updateTotals()"
-style="width:80px;border:1px solid #ccc;">
-</span>
-</div>
-
-<div>
-<span>Billing Amount</span>
-<span id="billingAmount">₹0</span>
-</div>
-
-<div>
-<span>GST 18%</span>
-<span id="gstAmount">₹0</span>
-</div>
-
-<div>
-<span>Transferable Amount</span>
-<span id="transferAmount">₹0</span>
-</div>
-
-<div>
-<span>Other Amount</span>
-<span id="otherAmount">₹0</span>
-</div>
-
-<div style="font-weight:bold;font-size:22px;">
-<span>Total Order Amount</span>
-<span id="finalAmount">₹0</span>
-</div>
-
-</div>
-
-</div>
+    </div>
 
 </div>
 
 <script>
 
+function getWeight(thickness, quality){
+
+    thickness = thickness.toLowerCase();
+    quality = quality.toLowerCase();
+
+    // ALT WEIGHT
+    if(quality.includes("alt")){
+
+        if(thickness.includes("18")) return 1.3;
+        if(thickness.includes("12")) return 21;
+        if(thickness.includes("9")) return 14.5;
+        if(thickness.includes("6")) return 0.3;
+
+    }
+
+    // POPULAR WEIGHT
+    else{
+
+        if(thickness.includes("18")) return 0.9;
+        if(thickness.includes("12")) return 0.57;
+        if(thickness.includes("9")) return 0.4;
+        if(thickness.includes("6")) return 0.2;
+
+    }
+
+    return 0;
+}
+
+function calculate(){
+
+    let totalWeight = 0;
+    let totalAmount = 0;
+
+    let quality =
+    document.getElementById("qualityName").value;
+
+    document.querySelectorAll("#tbody tr").forEach(row=>{
+
+        let thickness =
+        row.querySelector(".thickness").value;
+
+        let qty =
+        parseFloat(row.querySelector(".qty").value) || 0;
+
+        let amount =
+        parseFloat(row.querySelector(".amount").value) || 0;
+
+        let singleWeight =
+        getWeight(thickness, quality);
+
+        let finalWeight =
+        qty * singleWeight;
+
+        row.querySelector(".weight").innerHTML =
+        finalWeight.toFixed(2) + " KG";
+
+        totalWeight += finalWeight;
+
+        totalAmount += amount;
+
+    });
+
+    document.getElementById("totalWeight").innerHTML =
+    totalWeight.toFixed(2) + " KG";
+
+    document.getElementById("productAmount").innerHTML =
+    "₹" + totalAmount.toLocaleString();
+
+    let billingPercent =
+    parseFloat(document.getElementById("billingPercent").value) || 0;
+
+    let billingAmount =
+    totalAmount * billingPercent / 100;
+
+    let gst =
+    billingAmount * 18 / 100;
+
+    let transferable =
+    billingAmount + gst;
+
+    let other =
+    totalAmount - billingAmount;
+
+    let final =
+    transferable + other;
+
+    document.getElementById("billingAmount").innerHTML =
+    "₹" + billingAmount.toLocaleString();
+
+    document.getElementById("gstAmount").innerHTML =
+    "₹" + gst.toLocaleString();
+
+    document.getElementById("transferableAmount").innerHTML =
+    "₹" + transferable.toLocaleString();
+
+    document.getElementById("otherAmount").innerHTML =
+    "₹" + other.toLocaleString();
+
+    document.getElementById("finalAmount").innerHTML =
+    "₹" + final.toLocaleString();
+}
+
 function addRow(){
 
-const row = document.createElement("tr");
+    let tr = document.createElement("tr");
 
-row.innerHTML = `
+    tr.innerHTML = `
 
-<td>
-<input type="text"
-class="thickness"
-placeholder="18mm"
-oninput="calculate(this)">
-</td>
+        <td>
+            <input type="text"
+            class="thickness"
+            value="18mm">
+        </td>
 
-<td>
-<input type="text"
-placeholder="8x4">
-</td>
+        <td>
+            <input type="text"
+            value="8x4">
+        </td>
 
-<td>
-<input type="number"
-class="qty"
-value="1"
-oninput="calculate(this)">
-</td>
+        <td>
+            <input type="number"
+            class="qty"
+            value="1">
+        </td>
 
-<td>
-<input type="number"
-class="sqf"
-placeholder="32"
-oninput="calculate(this)">
-</td>
+        <td>
+            <input type="number"
+            value="32">
+        </td>
 
-<td>
-<input type="text"
-class="weight"
-readonly>
-</td>
+        <td class="weight">0</td>
 
-<td>
-<input type="number"
-class="rate"
-placeholder="50"
-oninput="calculate(this)">
-</td>
+        <td>
+            <input type="number"
+            class="amount"
+            value="0">
+        </td>
 
-<td>
-<input type="text"
-class="amount"
-readonly>
-</td>
+    `;
 
-<td>
-<button onclick="removeRow(this)">
-X
-</button>
-</td>
+    document.getElementById("tbody").appendChild(tr);
 
-`;
+    attachEvents();
 
-document.getElementById("tbody")
-.appendChild(row);
-
+    calculate();
 }
 
-function removeRow(btn){
+function attachEvents(){
 
-btn.parentElement.parentElement.remove();
+    document.querySelectorAll("input").forEach(input=>{
 
-updateTotals();
+        input.removeEventListener("input", calculate);
 
+        input.addEventListener("input", calculate);
+
+    });
 }
 
-function calculate(el){
+attachEvents();
 
-const row =
-el.parentElement.parentElement;
-
-const thickness =
-row.querySelector(".thickness")
-.value.toLowerCase();
-
-const quality =
-document.getElementById("qualityName")
-.value.toLowerCase();
-
-const qty =
-Number(row.querySelector(".qty")
-.value || 0);
-
-const sqf =
-Number(row.querySelector(".sqf")
-.value || 0);
-
-const rate =
-Number(row.querySelector(".rate")
-.value || 0);
-
-let weightPerQty = 0;
-
-const isALT =
-quality.includes("alt");
-
-if(isALT){
-
-if(thickness.includes("6")){
-weightPerQty = 0.300;
-}
-
-else if(thickness.includes("9")){
-weightPerQty = 14.5;
-}
-
-else if(thickness.includes("12")){
-weightPerQty = 21;
-}
-
-else if(thickness.includes("18")){
-weightPerQty = 1.3;
-}
-
-}else{
-
-if(thickness.includes("6")){
-weightPerQty = 0.200;
-}
-
-else if(thickness.includes("9")){
-weightPerQty = 0.400;
-}
-
-else if(thickness.includes("12")){
-weightPerQty = 0.570;
-}
-
-else if(thickness.includes("18")){
-weightPerQty = 0.900;
-}
-
-}
-
-const totalWeight =
-qty * weightPerQty;
-
-const amount =
-qty * sqf * rate;
-
-row.querySelector(".weight").value =
-totalWeight.toFixed(2)+" KG";
-
-row.querySelector(".amount").value =
-"₹"+amount.toLocaleString("en-IN");
-
-updateTotals();
-
-}
-
-function updateTotals(){
-
-let totalSQF = 0;
-let totalWeight = 0;
-let totalAmount = 0;
-
-document.querySelectorAll("#tbody tr")
-.forEach(row=>{
-
-const qty =
-Number(row.querySelector(".qty")
-.value || 0);
-
-const sqf =
-Number(row.querySelector(".sqf")
-.value || 0);
-
-const weight =
-Number(
-(row.querySelector(".weight")
-.value || "0")
-.replace(" KG","")
-);
-
-const amount =
-Number(
-(row.querySelector(".amount")
-.value || "0")
-.replace(/[^0-9.]/g,"")
-);
-
-totalSQF += qty * sqf;
-
-totalWeight += weight;
-
-totalAmount += amount;
-
-});
-
-document.getElementById("totalSQF")
-.innerText =
-totalSQF.toFixed(2);
-
-document.getElementById("totalWeight")
-.innerText =
-totalWeight.toFixed(2)+" KG";
-
-document.getElementById("totalAmount")
-.innerText =
-"₹"+totalAmount.toLocaleString("en-IN");
-
-const billingPercent =
-Number(
-document.getElementById("billingPercent")
-.value || 0
-);
-
-const billingAmount =
-(totalAmount * billingPercent)/100;
-
-const gst =
-billingAmount * 0.18;
-
-const transfer =
-billingAmount + gst;
-
-const other =
-totalAmount - billingAmount;
-
-const final =
-transfer + other;
-
-document.getElementById("billingAmount")
-.innerText =
-"₹"+billingAmount.toLocaleString("en-IN");
-
-document.getElementById("gstAmount")
-.innerText =
-"₹"+gst.toLocaleString("en-IN");
-
-document.getElementById("transferAmount")
-.innerText =
-"₹"+transfer.toLocaleString("en-IN");
-
-document.getElementById("otherAmount")
-.innerText =
-"₹"+other.toLocaleString("en-IN");
-
-document.getElementById("finalAmount")
-.innerText =
-"₹"+final.toLocaleString("en-IN");
-
-}
-
-addRow();
+calculate();
 
 </script>
 
